@@ -1,27 +1,26 @@
-// دالة التنقل بين التبويبات (تم تحسينها لتشمل جميع الأقسام وتعمل بكفاءة)
+// مصفوفة لتخزين الخدمات (تعمل في الذاكرة حالياً لحين ربطها بقاعدة البيانات)
+let servicesData = [];
+
+// دالة التنقل بين التبويبات
 function switchTab(tabId, clickedButton) {
-    // 1. إخفاء جميع التبويبات
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
         tab.classList.remove('active');
     });
 
-    // 2. إزالة حالة "النشط" من جميع أزرار الشريط السفلي
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // 3. إظهار التبويب المطلوب
     const activeTab = document.getElementById(tabId);
     if(activeTab) {
         activeTab.classList.add('active');
         
-        // إعادة تشغيل الأنيميشن
         const animatedElements = activeTab.querySelectorAll('.animate__animated');
         animatedElements.forEach(el => {
             el.classList.remove('animate__fadeInUp', 'animate__fadeInDown', 'animate__fadeIn');
-            void el.offsetWidth; // Trigger reflow
+            void el.offsetWidth; 
             
             if(el.classList.contains('section-title') || el.classList.contains('reports-header')) {
                 el.classList.add('animate__fadeInDown');
@@ -33,13 +32,85 @@ function switchTab(tabId, clickedButton) {
         });
     }
 
-    // 4. تفعيل الزر الذي تم النقر عليه
     if(clickedButton) {
         clickedButton.classList.add('active');
     }
 }
 
-// تعيين التاريخ التلقائي في قسم "بيع الخدمة" و فلاتر التقارير
+// دالة إضافة خدمة جديدة
+function addService() {
+    const name = document.getElementById('service-name').value;
+    const price = document.getElementById('service-price').value;
+    const imgInput = document.getElementById('service-image');
+    
+    // صورة افتراضية في حال لم يقم باختيار صورة
+    let imgSrc = 'https://via.placeholder.com/150?text=بدون+صورة'; 
+    
+    if(imgInput.files && imgInput.files[0]) {
+        imgSrc = URL.createObjectURL(imgInput.files[0]);
+    }
+
+    if(name && price) {
+        const newService = { name, price, img: imgSrc };
+        servicesData.push(newService);
+        
+        // تفريغ الحقول بعد الإضافة
+        document.getElementById('service-name').value = '';
+        document.getElementById('service-price').value = '';
+        document.getElementById('service-image').value = '';
+
+        // تحديث عرض الخدمات
+        renderServices();
+        showNotification('تم إضافة الخدمة بنجاح!');
+    } else {
+        Swal.fire({
+            text: 'يرجى إدخال عنوان الخدمة والسعر',
+            icon: 'error',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    }
+}
+
+// دالة رسم وتحديث البطاقات في قسم الخدمات وقسم البيع
+function renderServices() {
+    const servicesList = document.getElementById('services-list');
+    const sellGrid = document.getElementById('sell-services-grid');
+    
+    let html = '';
+    servicesData.forEach((srv, index) => {
+        html += `
+            <div class="service-card" onclick="selectServiceToSell(${index})">
+                <img src="${srv.img}" alt="${srv.name}">
+                <h4>${srv.name}</h4>
+                <p>${srv.price} د.ع</p>
+            </div>
+        `;
+    });
+
+    if(servicesList) servicesList.innerHTML = html;
+    if(sellGrid) sellGrid.innerHTML = html;
+}
+
+// دالة اختيار الخدمة للبيع (إخفاء البطاقات وإظهار الحقول)
+function selectServiceToSell(index) {
+    const srv = servicesData[index];
+    document.getElementById('sell-services-grid').style.display = 'none';
+    document.getElementById('sell-form-container').style.display = 'block';
+    
+    // وضع اسم وسعر الخدمة في العنوان
+    document.getElementById('selected-service-title').innerText = `بيع: ${srv.name} (${srv.price} د.ع)`;
+}
+
+// دالة الرجوع من حقول البيع إلى شبكة الخدمات
+function showSellGrid() {
+    document.getElementById('sell-services-grid').style.display = 'grid';
+    document.getElementById('sell-form-container').style.display = 'none';
+}
+
+// تعيين التاريخ التلقائي
 document.addEventListener('DOMContentLoaded', () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -47,24 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const dd = String(today.getDate()).padStart(2, '0');
     const formattedDate = `${yyyy}-${mm}-${dd}`;
 
-    // تاريخ فاتورة البيع
     const dateInput = document.getElementById('auto-date');
     if(dateInput) dateInput.value = formattedDate;
 
-    // تواريخ التقارير الافتراضية
     const fromDate = document.getElementById('fromDate');
     const toDate = document.getElementById('toDate');
     
-    if(fromDate) {
-        // نضع تاريخ بداية الشهر كمثال
-        fromDate.value = `${yyyy}-${mm}-01`;
-    }
-    if(toDate) {
-        toDate.value = formattedDate;
-    }
+    if(fromDate) fromDate.value = `${yyyy}-${mm}-01`;
+    if(toDate) toDate.value = formattedDate;
 });
 
-// الميزة رقم 6: نظام التنبيهات باستخدام مكتبة SweetAlert2 الجميلة
+// نظام التنبيهات
 function showNotification(message) {
     Swal.fire({
         text: message,
@@ -80,7 +144,6 @@ function showNotification(message) {
     });
 }
 
-// الميزة رقم 7: تصدير إلى Excel
 function exportExcel() {
     Swal.fire({
         title: 'جاري التصدير...',
@@ -91,7 +154,6 @@ function exportExcel() {
     });
 }
 
-// ميزة الإعدادات: تحميل النسخة الاحتياطية
 function backupData() {
     Swal.fire({
         title: 'نسخة احتياطية',
@@ -102,11 +164,10 @@ function backupData() {
     });
 }
 
-// ميزة الإعدادات: استعادة النسخة الاحتياطية
 function restoreData() {
     Swal.fire({
         title: 'استعادة البيانات',
-        text: 'الرجاء اختيار ملف النسخة الاحتياطية (سيتم تفعيلها مع قاعدة البيانات).',
+        text: 'الرجاء اختيار ملف النسخة الاحتياطية.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'اختر ملف',
