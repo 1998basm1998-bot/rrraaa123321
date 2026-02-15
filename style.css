@@ -97,6 +97,7 @@ body {
     cursor: pointer;
     transition: transform 0.3s, border 0.3s;
     border: 1px solid var(--border-color);
+    position: relative; /* ضروري لزر الحذف */
 }
 .service-card:hover {
     transform: translateY(-3px);
@@ -120,6 +121,30 @@ body {
     color: var(--card-blue-icon);
     font-weight: bold;
 }
+
+/* ستايل زر حذف الخدمة الجديد */
+.delete-service-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.3s;
+}
+.delete-service-btn:hover {
+    background: #ef4444;
+    color: white;
+}
+
 .back-btn {
     width: auto;
     color: var(--text-dark);
