@@ -55,21 +55,41 @@
         <section id="invoices" class="tab-content">
             <h2 class="section-title animate__animated animate__fadeInDown">سجل الفواتير</h2>
             
-            <div class="search-box animate__animated animate__fadeInUp">
-                <input type="text" placeholder="بحث باسم الزبون أو رقم الفاتورة..." class="input-field search-input">
-            </div>
+            <div id="invoice-list-container">
+                <div class="search-box animate__animated animate__fadeInUp">
+                    <input type="text" placeholder="بحث باسم الزبون أو رقم الفاتورة..." class="input-field search-input">
+                </div>
 
-            <div class="list-container animate__animated animate__fadeInUp mt-15">
-                <div class="invoice-card">
-                    <div class="invoice-info">
-                        <h4>فاتورة #1001 - علي محمد</h4>
-                        <p>تاريخ: 16 فبراير 2026 | الحالة: قيد العمل</p>
-                    </div>
-                    <div class="invoice-actions">
-                        <button class="btn-icon edit" onclick="editInvoice()"><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn-icon delete" onclick="deleteInvoice(this)"><i class="fa-solid fa-trash"></i></button>
+                <div class="list-container animate__animated animate__fadeInUp mt-15">
+                    <div class="invoice-card">
+                        <div class="invoice-info">
+                            <h4>فاتورة #1001 - علي محمد</h4>
+                            <p>تاريخ: 16 فبراير 2026 | الحالة: قيد العمل</p>
+                        </div>
+                        <div class="invoice-actions">
+                            <button class="btn-icon edit" onclick="editInvoice()"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-icon delete" onclick="deleteInvoice(this)"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="edit-invoice-container" class="form-container animate__animated animate__fadeInUp" style="display: none;">
+                <button class="btn-icon mb-15 back-btn" onclick="cancelEditInvoice()"><i class="fa-solid fa-arrow-right"></i> إلغاء التعديل</button>
+                <h3 class="mb-15" style="color: var(--card-blue-icon); text-align: center;">تعديل الفاتورة #1001</h3>
+
+                <input type="text" placeholder="اسم الزبون" value="علي محمد" class="input-field">
+                <input type="tel" placeholder="رقم هاتف الزبون" class="input-field">
+                <input type="number" placeholder="العدد" value="1" class="input-field">
+                
+                <select class="input-field">
+                    <option value="pending">حالة الخدمة: قيد الانتظار</option>
+                    <option value="working" selected>حالة الخدمة: قيد العمل</option>
+                    <option value="done">حالة الخدمة: تم الإنجاز</option>
+                </select>
+
+                <input type="date" class="input-field" value="2026-02-16">
+                <button class="btn-primary" onclick="saveInvoiceEdit()">حفظ التعديلات</button>
             </div>
         </section>
 
