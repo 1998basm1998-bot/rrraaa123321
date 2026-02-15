@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق الإدارة والتقارير</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="app-container">
+
+        <section id="services" class="tab-content">
+            <h2 class="section-title animate__animated animate__fadeInDown">إدارة الخدمات</h2>
+            <div class="form-container animate__animated animate__fadeInUp">
+                <input type="text" placeholder="عنوان الخدمة" class="input-field">
+                <input type="number" placeholder="السعر" class="input-field">
+                <input type="file" class="input-field" accept="image/*">
+                <button class="btn-primary">إضافة خدمة</button>
+            </div>
+        </section>
+
+        <section id="sell" class="tab-content">
+            <h2 class="section-title animate__animated animate__fadeInDown">بيع خدمة</h2>
+            <div class="form-container animate__animated animate__fadeInUp">
+                <select class="input-field">
+                    <option>اختر الخدمة...</option>
+                </select>
+                <input type="number" placeholder="العدد" class="input-field">
+                <input type="date" id="auto-date" class="input-field" readonly>
+                <button class="btn-primary">حفظ الفاتورة</button>
+            </div>
+        </section>
+
+        <section id="invoices" class="tab-content">
+            <h2 class="section-title animate__animated animate__fadeInDown">سجل الفواتير</h2>
+            <div class="list-container animate__animated animate__fadeInUp">
+                <div class="invoice-card">
+                    <div class="invoice-info">
+                        <h4>فاتورة #1001</h4>
+                        <p>تاريخ: 16 فبراير 2026</p>
+                    </div>
+                    <div class="invoice-actions">
+                        <button class="btn-icon edit"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-icon delete"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bonds" class="tab-content">
+            <h2 class="section-title animate__animated animate__fadeInDown">السندات المالية</h2>
+            <div class="bonds-container animate__animated animate__fadeInUp">
+                <div class="bond-card receipt">
+                    <h3>سند قبض</h3>
+                    <input type="number" placeholder="مبلغ القبض" class="input-field">
+                    <button class="btn-primary success">إضافة قبض</button>
+                </div>
+                <div class="bond-card payment">
+                    <h3>سند صرف</h3>
+                    <input type="text" placeholder="اسم الشخص" class="input-field">
+                    <input type="number" placeholder="مبلغ الصرف" class="input-field">
+                    <button class="btn-primary danger">إضافة صرف</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="reports" class="tab-content active">
+            <div class="reports-header animate__animated animate__fadeInDown">
+                <i class="fa-solid fa-arrow-right"></i>
+                <h2>الإحصائيات والتقارير</h2>
+            </div>
+
+            <div class="sub-nav animate__animated animate__fadeIn">
+                <span class="active">نظرة عامة</span>
+                <span>المواد</span>
+                <span>المطابقة اليومية</span>
+            </div>
+
+            <div class="date-filters animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="date-box">
+                    <span>من تاريخ</span>
+                    <strong>17 يناير 2026</strong>
+                </div>
+                <div class="date-box">
+                    <span>إلى تاريخ</span>
+                    <strong>16 فبراير 2026</strong>
+                </div>
+            </div>
+
+            <div class="stats-grid animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="stat-card blue">
+                    <div class="icon-box"><i class="fa-solid fa-wallet"></i></div>
+                    <p>رصيد الصندوق</p>
+                    <h3 class="total-sales">0 د.ع</h3>
+                </div>
+                <div class="stat-card green">
+                    <div class="icon-box"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                    <p>صافي الربح</p>
+                    <h3 class="net-profit">0 د.ع</h3>
+                </div>
+            </div>
+
+            <div class="comprehensive-summary animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="summary-header">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <h3>الملخص الشامل</h3>
+                </div>
+
+                <div class="summary-section">
+                    <div class="section-title-sm">
+                        <i class="fa-solid fa-building-columns"></i> النتائج المالية
+                    </div>
+                    <div class="summary-row">
+                        <span>رصيد الصندوق</span>
+                        <span class="val blue-text">0 د.ع</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>صافي الربح</span>
+                        <span class="val green-text">0 د.ع</span>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="summary-section">
+                    <div class="section-title-sm">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير
+                    </div>
+                    <div class="summary-row">
+                        <span>عدد الفواتير</span>
+                        <span class="val">0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>إجمالي المبيعات</span>
+                        <span class="val blue-text">0 د.ع</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>المدفوع</span>
+                        <span class="val green-text">0 د.ع</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>المتبقي</span>
+                        <span class="val orange-text">0 د.ع</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="switchTab('services', this)">
+            <i class="fa-solid fa-box"></i>
+            <span>الخدمات</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('sell', this)">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>بيع</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('invoices', this)">
+            <i class="fa-solid fa-receipt"></i>
+            <span>الفواتير</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('bonds', this)">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <span>السندات</span>
+        </button>
+        <button class="nav-item active" onclick="switchTab('reports', this)">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>التقارير</span>
+        </button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
