@@ -6,6 +6,7 @@
     <title>تطبيق الإدارة والتقارير</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,29 +19,44 @@
                 <input type="text" placeholder="عنوان الخدمة" class="input-field">
                 <input type="number" placeholder="السعر" class="input-field">
                 <input type="file" class="input-field" accept="image/*">
-                <button class="btn-primary">إضافة خدمة</button>
+                <button class="btn-primary" onclick="showNotification('تم إضافة الخدمة بنجاح!')">إضافة خدمة</button>
             </div>
         </section>
 
         <section id="sell" class="tab-content">
             <h2 class="section-title animate__animated animate__fadeInDown">بيع خدمة</h2>
             <div class="form-container animate__animated animate__fadeInUp">
+                <input type="text" placeholder="اسم الزبون" class="input-field">
+                <input type="tel" placeholder="رقم هاتف الزبون" class="input-field">
+                
                 <select class="input-field">
                     <option>اختر الخدمة...</option>
                 </select>
                 <input type="number" placeholder="العدد" class="input-field">
+                
+                <select class="input-field">
+                    <option value="pending">حالة الخدمة: قيد الانتظار</option>
+                    <option value="working">حالة الخدمة: قيد العمل</option>
+                    <option value="done">حالة الخدمة: تم الإنجاز</option>
+                </select>
+
                 <input type="date" id="auto-date" class="input-field" readonly>
-                <button class="btn-primary">حفظ الفاتورة</button>
+                <button class="btn-primary" onclick="showNotification('تم حفظ الفاتورة بنجاح!')">حفظ الفاتورة</button>
             </div>
         </section>
 
         <section id="invoices" class="tab-content">
             <h2 class="section-title animate__animated animate__fadeInDown">سجل الفواتير</h2>
-            <div class="list-container animate__animated animate__fadeInUp">
+            
+            <div class="search-box animate__animated animate__fadeInUp">
+                <input type="text" placeholder="بحث باسم الزبون أو رقم الفاتورة..." class="input-field search-input">
+            </div>
+
+            <div class="list-container animate__animated animate__fadeInUp mt-15">
                 <div class="invoice-card">
                     <div class="invoice-info">
-                        <h4>فاتورة #1001</h4>
-                        <p>تاريخ: 16 فبراير 2026</p>
+                        <h4>فاتورة #1001 - علي محمد</h4>
+                        <p>تاريخ: 16 فبراير 2026 | الحالة: قيد العمل</p>
                     </div>
                     <div class="invoice-actions">
                         <button class="btn-icon edit"><i class="fa-solid fa-pen"></i></button>
@@ -56,13 +72,13 @@
                 <div class="bond-card receipt">
                     <h3>سند قبض</h3>
                     <input type="number" placeholder="مبلغ القبض" class="input-field">
-                    <button class="btn-primary success">إضافة قبض</button>
+                    <button class="btn-primary success" onclick="showNotification('تم إضافة سند القبض!')">إضافة قبض</button>
                 </div>
                 <div class="bond-card payment">
                     <h3>سند صرف</h3>
                     <input type="text" placeholder="اسم الشخص" class="input-field">
                     <input type="number" placeholder="مبلغ الصرف" class="input-field">
-                    <button class="btn-primary danger">إضافة صرف</button>
+                    <button class="btn-primary danger" onclick="showNotification('تم إضافة سند الصرف!')">إضافة صرف</button>
                 </div>
             </div>
         </section>
@@ -82,11 +98,11 @@
             <div class="date-filters animate__animated animate__fadeInUp animate__delay-1s">
                 <div class="date-box">
                     <span>من تاريخ</span>
-                    <strong>17 يناير 2026</strong>
+                    <input type="date" class="input-field date-picker" id="fromDate">
                 </div>
                 <div class="date-box">
                     <span>إلى تاريخ</span>
-                    <strong>16 فبراير 2026</strong>
+                    <input type="date" class="input-field date-picker" id="toDate">
                 </div>
             </div>
 
@@ -146,6 +162,22 @@
                         <span class="val orange-text">0 د.ع</span>
                     </div>
                 </div>
+                
+                <button class="btn-primary success mt-15" onclick="exportExcel()">
+                    <i class="fa-solid fa-file-excel"></i> تصدير إلى Excel
+                </button>
+            </div>
+        </section>
+
+        <section id="settings" class="tab-content">
+            <h2 class="section-title animate__animated animate__fadeInDown">الإعدادات والنسخ الاحتياطي</h2>
+            <div class="form-container animate__animated animate__fadeInUp">
+                <button class="btn-primary" onclick="backupData()">
+                    <i class="fa-solid fa-download"></i> تحميل نسخة احتياطية (Backup)
+                </button>
+                <button class="btn-primary danger mt-15" onclick="restoreData()">
+                    <i class="fa-solid fa-upload"></i> استعادة نسخة احتياطية (Restore)
+                </button>
             </div>
         </section>
 
@@ -171,6 +203,10 @@
         <button class="nav-item active" onclick="switchTab('reports', this)">
             <i class="fa-solid fa-chart-pie"></i>
             <span>التقارير</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('settings', this)">
+            <i class="fa-solid fa-gear"></i>
+            <span>الإعدادات</span>
         </button>
     </nav>
 
