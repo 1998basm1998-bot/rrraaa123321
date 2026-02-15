@@ -1,4 +1,4 @@
-// مصفوفة لتخزين الخدمات (تعمل في الذاكرة حالياً لحين ربطها بقاعدة البيانات)
+// مصفوفة لتخزين الخدمات
 let servicesData = [];
 
 // دالة التنقل بين التبويبات
@@ -43,7 +43,6 @@ function addService() {
     const price = document.getElementById('service-price').value;
     const imgInput = document.getElementById('service-image');
     
-    // صورة افتراضية في حال لم يقم باختيار صورة
     let imgSrc = 'https://via.placeholder.com/150?text=بدون+صورة'; 
     
     if(imgInput.files && imgInput.files[0]) {
@@ -54,12 +53,10 @@ function addService() {
         const newService = { name, price, img: imgSrc };
         servicesData.push(newService);
         
-        // تفريغ الحقول بعد الإضافة
         document.getElementById('service-name').value = '';
         document.getElementById('service-price').value = '';
         document.getElementById('service-image').value = '';
 
-        // تحديث عرض الخدمات
         renderServices();
         showNotification('تم إضافة الخدمة بنجاح!');
     } else {
@@ -74,14 +71,27 @@ function addService() {
     }
 }
 
-// دالة رسم وتحديث البطاقات في قسم الخدمات وقسم البيع
+// دالة رسم وتحديث البطاقات مع فصل عرض زر الحذف لقسم الخدمات فقط
 function renderServices() {
     const servicesList = document.getElementById('services-list');
     const sellGrid = document.getElementById('sell-services-grid');
     
-    let html = '';
+    let htmlServices = '';
+    let htmlSell = '';
+
     servicesData.forEach((srv, index) => {
-        html += `
+        // بطاقة قسم الخدمات (تحتوي على زر حذف)
+        htmlServices += `
+            <div class="service-card">
+                <button class="delete-service-btn" onclick="deleteService(${index}, event)"><i class="fa-solid fa-times"></i></button>
+                <img src="${srv.img}" alt="${srv.name}">
+                <h4>${srv.name}</h4>
+                <p>${srv.price} د.ع</p>
+            </div>
+        `;
+        
+        // بطاقة قسم البيع (بدون زر حذف، وعند الضغط تنقلك للبيع)
+        htmlSell += `
             <div class="service-card" onclick="selectServiceToSell(${index})">
                 <img src="${srv.img}" alt="${srv.name}">
                 <h4>${srv.name}</h4>
@@ -90,17 +100,37 @@ function renderServices() {
         `;
     });
 
-    if(servicesList) servicesList.innerHTML = html;
-    if(sellGrid) sellGrid.innerHTML = html;
+    if(servicesList) servicesList.innerHTML = htmlServices;
+    if(sellGrid) sellGrid.innerHTML = htmlSell;
 }
 
-// دالة اختيار الخدمة للبيع (إخفاء البطاقات وإظهار الحقول)
+// دالة حذف الخدمة
+function deleteService(index, event) {
+    event.stopPropagation(); // لمنع تداخل الضغطات
+    Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: "سيتم حذف هذه الخدمة نهائياً",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'نعم، احذف',
+        cancelButtonText: 'إلغاء'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            servicesData.splice(index, 1);
+            renderServices(); // إعادة رسم البطاقات بعد الحذف
+            showNotification('تم حذف الخدمة بنجاح!');
+        }
+    });
+}
+
+// دالة اختيار الخدمة للبيع
 function selectServiceToSell(index) {
     const srv = servicesData[index];
     document.getElementById('sell-services-grid').style.display = 'none';
     document.getElementById('sell-form-container').style.display = 'block';
     
-    // وضع اسم وسعر الخدمة في العنوان
     document.getElementById('selected-service-title').innerText = `بيع: ${srv.name} (${srv.price} د.ع)`;
 }
 
@@ -108,6 +138,49 @@ function selectServiceToSell(index) {
 function showSellGrid() {
     document.getElementById('sell-services-grid').style.display = 'grid';
     document.getElementById('sell-form-container').style.display = 'none';
+}
+
+// دوال تعديل الفاتورة
+function editInvoice() {
+    document.getElementById('invoice-list-container').style.display = 'none';
+    document.getElementById('edit-invoice-container').style.display = 'block';
+}
+
+function cancelEditInvoice() {
+    document.getElementById('invoice-list-container').style.display = 'block';
+    document.getElementById('edit-invoice-container').style.display = 'none';
+}
+
+function saveInvoiceEdit() {
+    showNotification('تم حفظ التعديلات بنجاح!');
+    cancelEditInvoice(); // الرجوع لقائمة الفواتير بعد الحفظ
+}
+
+// دالة حذف الفاتورة
+function deleteInvoice(btn) {
+    Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: "لن تتمكن من استرجاع الفاتورة بعد الحذف!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'نعم، احذفها!',
+        cancelButtonText: 'إلغاء'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const card = btn.closest('.invoice-card');
+            if (card) {
+                card.style.display = 'none';
+            }
+            Swal.fire({
+                title: 'تم الحذف!',
+                text: 'تم حذف الفاتورة بنجاح.',
+                icon: 'success',
+                confirmButtonColor: '#6b46c1'
+            });
+        }
+    });
 }
 
 // تعيين التاريخ التلقائي
@@ -144,53 +217,12 @@ function showNotification(message) {
     });
 }
 
-// دالة تعديل الفاتورة
-function editInvoice() {
-    Swal.fire({
-        title: 'تعديل الفاتورة',
-        text: 'تم فتح الفاتورة للتعديل',
-        icon: 'info',
-        confirmButtonText: 'حفظ التعديلات',
-        confirmButtonColor: '#6b46c1'
-    });
-}
-
-// دالة حذف الفاتورة
-function deleteInvoice(btn) {
-    Swal.fire({
-        title: 'هل أنت متأكد؟',
-        text: "لن تتمكن من استرجاع الفاتورة بعد الحذف!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'نعم، احذفها!',
-        cancelButtonText: 'إلغاء'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // إخفاء بطاقة الفاتورة من الواجهة كدليل على الحذف
-            const card = btn.closest('.invoice-card');
-            if (card) {
-                card.style.display = 'none';
-            }
-            Swal.fire({
-                title: 'تم الحذف!',
-                text: 'تم حذف الفاتورة بنجاح.',
-                icon: 'success',
-                confirmButtonColor: '#6b46c1'
-            });
-        }
-    });
-}
-
 // دالة تصدير ملف الإكسل (CSV)
 function exportExcel() {
-    // إنشاء بيانات CSV تدعم اللغة العربية
-    let csvContent = "\uFEFF"; // لدعم الترميز العربي في ملفات CSV
+    let csvContent = "\uFEFF"; 
     csvContent += "رقم الفاتورة,اسم الزبون,التاريخ,الحالة,المبلغ\n";
     csvContent += "1001,علي محمد,16 فبراير 2026,قيد العمل,0\n";
 
-    // إنشاء رابط وتنزيل الملف
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
