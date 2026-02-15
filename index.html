@@ -16,22 +16,29 @@
         <section id="services" class="tab-content">
             <h2 class="section-title animate__animated animate__fadeInDown">إدارة الخدمات</h2>
             <div class="form-container animate__animated animate__fadeInUp">
-                <input type="text" placeholder="عنوان الخدمة" class="input-field">
-                <input type="number" placeholder="السعر" class="input-field">
-                <input type="file" class="input-field" accept="image/*">
-                <button class="btn-primary" onclick="showNotification('تم إضافة الخدمة بنجاح!')">إضافة خدمة</button>
+                <input type="text" id="service-name" placeholder="عنوان الخدمة" class="input-field">
+                <input type="number" id="service-price" placeholder="السعر" class="input-field">
+                <input type="file" id="service-image" class="input-field" accept="image/*">
+                <button class="btn-primary" onclick="addService()">إضافة خدمة</button>
             </div>
+            
+            <div id="services-list" class="services-grid mt-15 animate__animated animate__fadeInUp">
+                </div>
         </section>
 
         <section id="sell" class="tab-content">
             <h2 class="section-title animate__animated animate__fadeInDown">بيع خدمة</h2>
-            <div class="form-container animate__animated animate__fadeInUp">
+            
+            <div id="sell-services-grid" class="services-grid animate__animated animate__fadeInUp">
+                </div>
+
+            <div id="sell-form-container" class="form-container animate__animated animate__fadeInUp" style="display: none;">
+                <button class="btn-icon mb-15 back-btn" onclick="showSellGrid()"><i class="fa-solid fa-arrow-right"></i> رجوع للخدمات</button>
+                <h3 id="selected-service-title" class="mb-15" style="color: var(--primary-purple); text-align: center;"></h3>
+
                 <input type="text" placeholder="اسم الزبون" class="input-field">
                 <input type="tel" placeholder="رقم هاتف الزبون" class="input-field">
                 
-                <select class="input-field">
-                    <option>اختر الخدمة...</option>
-                </select>
                 <input type="number" placeholder="العدد" class="input-field">
                 
                 <select class="input-field">
@@ -41,7 +48,7 @@
                 </select>
 
                 <input type="date" id="auto-date" class="input-field" readonly>
-                <button class="btn-primary" onclick="showNotification('تم حفظ الفاتورة بنجاح!')">حفظ الفاتورة</button>
+                <button class="btn-primary" onclick="showNotification('تم حفظ الفاتورة بنجاح!'); showSellGrid();">حفظ الفاتورة</button>
             </div>
         </section>
 
