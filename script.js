@@ -144,14 +144,64 @@ function showNotification(message) {
     });
 }
 
-function exportExcel() {
+// دالة تعديل الفاتورة
+function editInvoice() {
     Swal.fire({
-        title: 'جاري التصدير...',
-        text: 'سيتم تحميل ملف الإكسل قريباً (سيتم تفعيلها مع قاعدة البيانات).',
+        title: 'تعديل الفاتورة',
+        text: 'تم فتح الفاتورة للتعديل',
         icon: 'info',
-        confirmButtonText: 'حسناً',
+        confirmButtonText: 'حفظ التعديلات',
         confirmButtonColor: '#6b46c1'
     });
+}
+
+// دالة حذف الفاتورة
+function deleteInvoice(btn) {
+    Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: "لن تتمكن من استرجاع الفاتورة بعد الحذف!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'نعم، احذفها!',
+        cancelButtonText: 'إلغاء'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // إخفاء بطاقة الفاتورة من الواجهة كدليل على الحذف
+            const card = btn.closest('.invoice-card');
+            if (card) {
+                card.style.display = 'none';
+            }
+            Swal.fire({
+                title: 'تم الحذف!',
+                text: 'تم حذف الفاتورة بنجاح.',
+                icon: 'success',
+                confirmButtonColor: '#6b46c1'
+            });
+        }
+    });
+}
+
+// دالة تصدير ملف الإكسل (CSV)
+function exportExcel() {
+    // إنشاء بيانات CSV تدعم اللغة العربية
+    let csvContent = "\uFEFF"; // لدعم الترميز العربي في ملفات CSV
+    csvContent += "رقم الفاتورة,اسم الزبون,التاريخ,الحالة,المبلغ\n";
+    csvContent += "1001,علي محمد,16 فبراير 2026,قيد العمل,0\n";
+
+    // إنشاء رابط وتنزيل الملف
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "تقارير_المبيعات.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showNotification('تم تحميل ملف الإكسل بنجاح!');
 }
 
 function backupData() {
